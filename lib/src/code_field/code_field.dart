@@ -57,7 +57,7 @@ class CodeField extends StatefulWidget {
 
   /// {@macro flutter.widgets.textField.selectionControls}
   final TextSelectionControls? selectionControls;
-
+  final Key? fieldKey;
   final Color? background;
   final EdgeInsets padding;
   final Decoration? decoration;
@@ -70,7 +70,7 @@ class CodeField extends StatefulWidget {
   final TextStyle? hintStyle;
 
   const CodeField({
-    Key? key,
+    this.fieldKey,
     required this.controller,
     this.minLines,
     this.maxLines,
@@ -97,7 +97,7 @@ class CodeField extends StatefulWidget {
     this.selectionControls,
     this.hintText,
     this.hintStyle,
-  }) : super(key: key);
+  });
 
   @override
   State<CodeField> createState() => _CodeFieldState();
@@ -282,7 +282,7 @@ class _CodeFieldState extends State<CodeField> {
       );
     }
 
-    final codeField = TextField(
+    final codeField = TextField(key: widget.fieldKey,
       keyboardType: widget.keyboardType,
       smartQuotesType: widget.smartQuotesType,
       focusNode: _focusNode,
