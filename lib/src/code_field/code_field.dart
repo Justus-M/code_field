@@ -84,8 +84,8 @@ class CodeField extends StatefulWidget {
   final CodeAutoComplete? autoComplete;
 
   const CodeField({
-    this.fieldKey,
     required this.controller,
+    this.fieldKey,
     this.minLines,
     this.maxLines,
     this.expands = false,
