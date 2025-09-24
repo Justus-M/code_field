@@ -401,27 +401,6 @@ class _CodeFieldState extends State<CodeField> {
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          // Save the textStyle and available width so _onTextChanged can
-          // accurately compute the amount of visual lines when wrapping.
-          _currentTextStyle = textStyle;
-          // Subtract left padding that will be applied inside the
-          // SingleChildScrollView when horizontal scrolling is disabled.
-          var availableWidth = constraints.maxWidth;
-          if (widget.lineNumbers) {
-            availableWidth -= widget.lineNumberStyle.width;
-          }
-
-          if ((availableWidth - _codeColumnWidth).abs() > 0.5) {
-            _codeColumnWidth = max(0, availableWidth);
-            // Recalculate the line numbers because wrapping may have
-            // changed due to a width change.
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) {
-                _onTextChanged();
-              }
-            });
-          }
-
           // Control horizontal scrolling
           return widget.wrap
               ? codeField
@@ -438,7 +417,34 @@ class _CodeFieldState extends State<CodeField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (widget.lineNumbers && numberCol != null) numberCol,
-          Expanded(child: codeCol),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Save the textStyle and available width so _onTextChanged can
+                // accurately compute the amount of visual lines when wrapping.
+                _currentTextStyle = textStyle;
+                // Subtract left padding that will be applied inside the
+                // SingleChildScrollView when horizontal scrolling is disabled.
+                var availableWidth = constraints.maxWidth;
+
+                const caretMargin = 3.0; // 1 gap + 2 cursor
+                availableWidth -= caretMargin;
+
+                if ((availableWidth - _codeColumnWidth).abs() > 0.5) {
+                  _codeColumnWidth = max(0, availableWidth);
+                  print('availableWidth: $availableWidth');
+                  // Recalculate the line numbers because wrapping may have
+                  // changed due to a width change.
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (mounted) {
+                      _onTextChanged();
+                    }
+                  });
+                }
+                return codeCol;
+              },
+            ),
+          ),
         ],
       ),
     );
