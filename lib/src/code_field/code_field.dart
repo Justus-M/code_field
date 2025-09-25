@@ -84,6 +84,7 @@ class CodeField extends StatefulWidget {
   final CodeAutoComplete? autoComplete;
 
   const CodeField({
+    Key? key,
     required this.controller,
     this.fieldKey,
     this.minLines,
@@ -115,7 +116,7 @@ class CodeField extends StatefulWidget {
     this.autoComplete,
     this.textInputAction,
     this.enableSuggestions = false,
-  });
+  }) : super(key: key);
 
   @override
   State<CodeField> createState() => _CodeFieldState();
